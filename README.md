@@ -28,4 +28,3 @@ To evaluate the results, you can use this command:
 ```commandline
 python -m scorer --model model_under_test_here --task the_task_here --scorer scorer_model_here --base_url api_base_url_here
 ```
-v
