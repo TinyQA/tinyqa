@@ -94,7 +94,6 @@ def pack_message(role: str, content: Any):
 
 def eval_model(args, input_path, output_path):
     client = OpenAI(
-        api_key=args.apikey,
         base_url=args.base_url,
     )
     with open(input_path) as f:
@@ -117,7 +116,7 @@ def eval_model(args, input_path, output_path):
         while True:
             try:
                 response = client.chat.completions.create(
-                    model="qwen2.5-32b-instruct",
+                    model=args.scorer,
                     messages=prompt,
                     temperature=0.5,
                     max_tokens=10,
@@ -175,10 +174,11 @@ def dumpl(data, output_path, append=False):
 
 parser = argparse.ArgumentParser(description="Hallucination Generation")
 parser.add_argument("--model", default="qwen2.5-3b-instruct")
+parser.add_argument("--scorer",type=str)
+parser.add_argument("--base_url",type=str)
 parser.add_argument("--save_dir", type=str, default="tinyqa_search/")
 parser.add_argument("--task",type=str,default="baseline")
 parser.add_argument("--answer_dir", default="tinyqa_score/")
-parser.add_argument("--quant", default=False)
 args = parser.parse_args()
 input_path = "{}/{}_{}_results.json".format(args.answer_dir, args.model.replace("/", "_"),args.task)
 output_path = "{}/{}_{}_results_score.txt".format(
