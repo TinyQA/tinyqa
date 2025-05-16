@@ -1,7 +1,6 @@
 import csv
 from typing import Any
 import argparse
-import torch
 from tqdm import tqdm
 import json
 from langchain_openai import ChatOpenAI
@@ -9,7 +8,7 @@ from langchain.agents import initialize_agent, AgentType
 from langchain.agents import load_tools
 
 def open_csv(args):
-    with open(args.file) as f:
+    with open(args.file,encoding="utf-8") as f:
         text=f.read()
         reader=csv.DictReader(text.splitlines())
         csv_data=list(reader)
@@ -20,7 +19,6 @@ def pack_message(role: str, content: Any):
     return {"role": str(role), "content": content}
 
     
-@torch.no_grad()
 def eval_model(args,output_path):
     llm = ChatOpenAI(
         base_url=args.base_url,
@@ -28,7 +26,7 @@ def eval_model(args,output_path):
         temperature=0
     )
     
-    tools = load_tools(["ddgs-search","llm-math"], llm=llm)
+    tools = load_tools(["ddg-search","llm-math"], llm=llm)
     
     agent = initialize_agent(
         tools=tools,
